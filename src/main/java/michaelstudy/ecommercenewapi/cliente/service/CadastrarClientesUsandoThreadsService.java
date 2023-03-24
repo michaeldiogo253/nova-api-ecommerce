@@ -5,12 +5,11 @@ import lombok.RequiredArgsConstructor;
 import michaelstudy.ecommercenewapi.cliente.controller.request.ClienteRequest;
 import michaelstudy.ecommercenewapi.usuario.repository.ClienteRepository;
 import michaelstudy.ecommercenewapi.usuario.repository.PerfilRepository;
-import michaelstudy.ecommercenewapi.usuario.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 
 @RequiredArgsConstructor
 @Transactional
@@ -20,12 +19,11 @@ public class CadastrarClientesUsandoThreadsService {
 	private final ClienteRepository clienteRepository;
 	private final PerfilRepository perfilRepository;
 
-	public void execute(List<ClienteRequest> requests) throws InterruptedException {
+	public void execute(List<ClienteRequest> requests) throws InterruptedException, ExecutionException {
 
 		if (requests.isEmpty()) {
 			return;
 		}
-
 
 		int size = requests.size();
 
@@ -37,29 +35,45 @@ public class CadastrarClientesUsandoThreadsService {
 		                                                                    1) /
 		                                                                   2, size));
 
-		CountDownLatch latch = new CountDownLatch(1);
 
+		int poolSize = 2;
+		ExecutorService service = Executors.newFixedThreadPool(poolSize);
+		List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
+
+
+		CountDownLatch latch = new CountDownLatch(1);
+		CadastrarClienteComThreadsComponent worker1 = new CadastrarClienteComThreadsComponent(latch,
+		                                                                                      clienteRepository,
+		                                                                                      perfilRepository,
+		                                                                                      firstList);
+
+		CadastrarClienteComThreadsComponent worker2 = new CadastrarClienteComThreadsComponent(latch,
+		                                                                                      clienteRepository,
+		                                                                                      perfilRepository,
+		                                                                                      secondList);
 
 		for (int n=0; n<2; n++) {
 
 			if(n == 0 ){
-				CadastrarClienteComThreadsComponent worker1 = new CadastrarClienteComThreadsComponent(latch,
-				                                                                                      clienteRepository,
-				                                                                                      perfilRepository,
-				                                                                                      firstList);
-				worker1.start();
+				Future f1 = service.submit(worker1);
+				futures.add(f1);
+
 			}
+
 			if(n == 1 ){
-				CadastrarClienteComThreadsComponent worker2 = new CadastrarClienteComThreadsComponent(latch,
-				                                                                                      clienteRepository,
-				                                                                                      perfilRepository,
-				                                                                                      secondList);
-				worker2.start();
+
+				Future f2 = service.submit(worker2);
+				futures.add(f2);
 			}
 
 		}
 
-		latch.await();
+		for (Future<Runnable> f : futures)
+		{
+			f.get();
+		}
+
+		service.shutdownNow();
 
 		System.out.println("Fim da execucao dos dois threads no Use case Principal");
 
