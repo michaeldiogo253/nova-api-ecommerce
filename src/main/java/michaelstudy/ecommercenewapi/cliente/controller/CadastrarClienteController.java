@@ -1,9 +1,10 @@
-//package michaelstudy.ecommercenewapi.cliente.controller;
+package michaelstudy.ecommercenewapi.cliente.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import michaelstudy.ecommercenewapi.cliente.controller.request.ClienteRequest;
 import michaelstudy.ecommercenewapi.cliente.domain.Cliente;
+import michaelstudy.ecommercenewapi.cliente.service.CadastrarClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-/*
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/cliente")
@@ -26,15 +26,18 @@ public class CadastrarClienteController {
 	public ResponseEntity<ClienteResponse> cadastrarCliente(@RequestBody @Valid ClienteRequest request,
 	                                                        UriComponentsBuilder uriBuilder) {
 
-		Cliente clienteCriado = useCase.execute(request.toModel());
+		Cliente clienteCriado = useCase.execute(request);
 
 		URI uri = uriBuilder.path("ecommerce-api/cliente/{id}")
 		                    .buildAndExpand(clienteCriado.getId())
 		                    .toUri();
 
-		return ResponseEntity.created(uri).body(new ClienteResponse(clienteCriado));
+		return ResponseEntity.created(uri)
+		                     .body(new ClienteResponse(clienteCriado));
+
+
 
 	}
 
 }
-*/
+
