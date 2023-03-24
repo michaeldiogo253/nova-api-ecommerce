@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class ConversorDeDatas {
 
-	public static LocalDate converteDataStringParaLocalDate(String data) {
+	public static LocalDate converteToLocalDate(String data) {
 
 		return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 	}
