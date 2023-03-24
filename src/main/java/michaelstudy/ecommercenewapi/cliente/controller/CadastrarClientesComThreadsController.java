@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,8 @@ public class CadastrarClientesComThreadsController {
 
 	@PostMapping("/clientes/cadastrar-varios-usando-threads")
 	public ResponseEntity<Void> cadastrarCliente(@RequestBody @Valid List<ClienteRequest> requests) throws
-	                                                                                                InterruptedException {
+	                                                                                                InterruptedException,
+	                                                                                                ExecutionException {
 
 		useCase.execute(requests);
 
