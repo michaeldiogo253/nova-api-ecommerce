@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import michaelstudy.ecommercenewapi.cliente.domain.Cliente;
-import michaelstudy.ecommercenewapi.cliente.domain.DadosPessoais;
-import michaelstudy.ecommercenewapi.util.ConversorDeDatas;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Getter
@@ -29,23 +26,6 @@ public class ClienteRequest {
 
 	@NotNull(message = "Endereco é obrigatorio") EnderecoRequest enderecoRequest;
 
-	public Cliente toModel() {
-
-		return new Cliente(new DadosPessoais(this.getNome(),
-		                                     this.getCpf(),
-		                                     this.getTelefone(),
-		                                     ConversorDeDatas.converteDataStringParaLocalDate(this.dataNasc)),
-
-		                   enderecoRequest.toModel());
-	}
-
-	public DadosPessoais toDadosPessoais(ClienteRequest request) {
-
-		return new DadosPessoais(request.nome,
-		                         request.cpf,
-		                         request.telefone,
-		                         ConversorDeDatas.converteDataStringParaLocalDate(request.dataNasc));
-	}
 
 	public String getCpf() {
 

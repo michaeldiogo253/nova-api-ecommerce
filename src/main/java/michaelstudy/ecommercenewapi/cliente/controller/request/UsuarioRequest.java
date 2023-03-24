@@ -9,9 +9,4 @@ public class UsuarioRequest {
 	String login;
 	String senha;
 
-	public Usuario toModel() {
-
-		return new Usuario(this.login, this.senha);
-	}
-
 }
