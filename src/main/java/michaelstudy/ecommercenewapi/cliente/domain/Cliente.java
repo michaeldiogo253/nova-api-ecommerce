@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import michaelstudy.ecommercenewapi.usuario.Usuario;
-
-import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -20,17 +17,6 @@ public class Cliente {
 	@Embedded private DadosPessoais dadosPessoais;
 
 	@Embedded private Endereco endereco;
-
-	public Cliente(String nome,
-	               String cpf,
-	               String telefone,
-	               LocalDate dataNasc,
-	               Endereco endereco) {
-
-		this.dadosPessoais = new DadosPessoais(nome, cpf, telefone, dataNasc);
-		this.endereco = endereco;
-
-	}
 
 	public Cliente(DadosPessoais dadosPessoais, Endereco endereco) {
 

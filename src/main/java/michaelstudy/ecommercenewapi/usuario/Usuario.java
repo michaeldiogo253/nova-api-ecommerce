@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,16 +20,25 @@ public class Usuario implements UserDetails {
 	@Column(unique = true) private String login;
 	private String senha;
 
+	@ManyToMany(fetch = FetchType.EAGER) private List<Perfil> perfis = new ArrayList<>();
+
 	public Usuario(String login, String senha) {
 
 		this.login = login;
 		this.senha = senha;
 	}
 
+	public Usuario(String login, String senha, List<Perfil> perfis) {
+
+		this.login = login;
+		this.senha = new BCryptPasswordEncoder().encode(senha);
+		this.perfis = perfis;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
-		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		return perfis;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package michaelstudy.ecommercenewapi.cliente.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
+@Builder
 public class Endereco {
 
 	private String logradouro;
